@@ -1,0 +1,35 @@
+{
+  "info": {
+    "title": "Tradeling Framework",
+    "description": "Tradeling Framework",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Amr Abada",
+      "url": "tradeling.com",
+      "email": "amr.ebada@tradeling.com"
+    }
+  },
+  "openapi": "3.0.2",
+  "servers": [
+    {
+      "url": "http://b2b.localhost/api/module-templates",
+      "description": "local_server"
+    },
+    {
+      "url": "https://www.tradelingdev.com/api/module-templates",
+      "description": "dev_server"
+    },
+    {
+      "url": "https://www.tradelingstage.com/api/module-templates",
+      "description": "stage_server"
+    },
+    {
+      "url": "https://www.tradeling.com/api/module-templates",
+      "description": "prod_server"
+    }
+  ],
+  "tags": [],
+  "paths": {},
+  "components": { "schemas": {} },
+  "ShouldGenerateSwagger": true
+}

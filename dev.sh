@@ -1,0 +1,1 @@
+nodemon --ignore './.*' --ignore 'README' --exec go run main.go $1 --signal SIGTERM   
