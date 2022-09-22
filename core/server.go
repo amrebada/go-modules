@@ -33,7 +33,7 @@ func (s *Server) RegisterMainModule() {
 	isMigrate := false
 	isSwagger := false
 	flag.BoolVar(&isMigrate, "m", false, "auto migrate database")
-	flag.BoolVar(&isSwagger, "s", false, "generate swagger")
+	flag.BoolVar(&isSwagger, "sw", false, "generate swagger")
 	flag.Parse()
 	if isMigrate {
 		err := s.MainModule.Migrate()

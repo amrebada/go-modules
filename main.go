@@ -14,6 +14,9 @@ func main() {
 	app := core.NewServer()
 	app.MainModule = modules.NewAppModule()
 	app.RegisterMainModule()
-	fmt.Println("adads")
-	app.Start()
+	err := app.Start()
+	if err != nil {
+		fmt.Println(err)
+	}
+
 }
