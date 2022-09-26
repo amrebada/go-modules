@@ -62,7 +62,7 @@ func Search(findUserDto *FindUserDto) (*FindUserResponseDto, error) {
 }
 
 func generateToken(user *UserEntity) (string, error) {
-	secret := core.NewConfig().JWT_SECRET
+	secret := core.ConfigInstance().JWT_SECRET
 	token := jwt.New(jwt.GetSigningMethod("HS256"))
 	claims := token.Claims.(jwt.MapClaims)
 	claims["userId"] = user.ID

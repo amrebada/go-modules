@@ -18,7 +18,7 @@ var database *Database
 
 func NewDatabase() *Database {
 	if database == nil {
-		config := NewConfig()
+		config := ConfigInstance()
 		dsn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
 			config.Database.HOST, config.Database.PORT, config.Database.USER, config.Database.DBNAME, config.Database.PASSWORD)
 		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{

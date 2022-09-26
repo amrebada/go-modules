@@ -1,25 +1,16 @@
-FROM debian
+# Build
+FROM golang:1.16-alpine AS build
 
+WORKDIR /app
+RUN apk add build-base
+COPY . . 
+RUN go mod vendor
+RUN GOOS=linux go build -o app
 
-ARG  jpeg=libjpeg-dev
-ARG  ssl=libssl-dev
-ENV  CFLAGS=-w CXXFLAGS=-w
-
-RUN apt-get update && apt-get install -y -q --no-install-recommends \
-    build-essential \
-    libfontconfig1-dev \
-    libfreetype6-dev \
-    $jpeg \
-    libpng-dev \
-    $ssl \
-    libx11-dev \
-    libxext-dev \
-    libxrender-dev \
-    python \
-    zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-
-COPY app /app
-
-CMD [ "/app" ]
+# Deploy
+FROM alpine:latest
+WORKDIR /workspace
+COPY --from=build /app/app ./app
+COPY .env.prod .env.prod
+EXPOSE 8080
+CMD ["/workspace/app", "-env", "prod"]

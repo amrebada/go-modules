@@ -1,7 +1,6 @@
 package core
 
 import (
-	"flag"
 	"fmt"
 	"net/http"
 	"time"
@@ -30,12 +29,8 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) RegisterMainModule() {
-	isMigrate := false
-	isSwagger := false
-	flag.BoolVar(&isMigrate, "m", false, "auto migrate database")
-	flag.BoolVar(&isSwagger, "sw", false, "generate swagger")
-	flag.Parse()
-	if isMigrate {
+	config := ConfigInstance()
+	if config.IS_MIGRATE {
 		err := s.MainModule.Migrate()
 		if err != nil {
 			panic(err)
@@ -68,17 +63,19 @@ func (s *Server) RegisterMainModule() {
 		AddServer(SwaggerServer{
 			URL:         "https://www.tradeling.com/api/module-templates",
 			Description: "prod_server",
-		}).SetShouldGenerateSwagger(isSwagger)
+		}).SetShouldGenerateSwagger(config.IS_SWAGGER)
 
 	s.MainModule.RegisterRoutes(s.Engine)
+
 	swagger.GenerateSwagger()
+
 }
 
 var server *Server
 
 func printAbout() {
 	fmt.Println("=====================================================================")
-	fmt.Println("=                 ", Colorize(magenta, "==== Tradeling Framework ===="), "                   =")
+	fmt.Println("=                 ", Colorize(magenta, "==== Obadas Framework ===="), "                      =")
 	fmt.Println("= ", Colorize(yellow, "Designed and Developed by"), Colorize(green, "Amr Abada"), Colorize(yellow, " <amr.app.engine@gmail.com>"), " =")
 	fmt.Println("=====================================================================")
 
@@ -105,7 +102,7 @@ func NewServer() *Server {
 		}))
 		engine.Use(gin.Recovery())
 		server = &Server{
-			Port:             NewConfig().Port,
+			Port:             ConfigInstance().Port,
 			Engine:           engine,
 			TimeoutInSeconds: 10,
 			MaxHeaderBytes:   1 << 20, // shift binary 1 by 20  = 131kb

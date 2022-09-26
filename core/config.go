@@ -3,8 +3,6 @@ package core
 import (
 	"os"
 	"strconv"
-
-	"github.com/joho/godotenv"
 )
 
 type DatabaseConfig struct {
@@ -20,13 +18,24 @@ type Config struct {
 	Port           int
 	Database       DatabaseConfig
 	JWT_SECRET     string
+	IS_MIGRATE     bool
+	IS_SWAGGER     bool
+}
+
+func (c *Config) SetMigrate(isMigrate bool) *Config {
+	c.IS_MIGRATE = isMigrate
+	return c
+}
+func (c *Config) SetSwagger(isSwagger bool) *Config {
+	c.IS_SWAGGER = isSwagger
+	return c
 }
 
 var config *Config
 
-func NewConfig() *Config {
-	godotenv.Load()
+func NewConfig(env Stage) *Config {
 	if config == nil {
+		LoadEnv(Stage(env))
 		port, err := strconv.Atoi(os.Getenv("PORT"))
 		if err != nil {
 			port = 8080
@@ -51,5 +60,9 @@ func NewConfig() *Config {
 			JWT_SECRET: jwt_secret,
 		}
 	}
+	return config
+}
+
+func ConfigInstance() *Config {
 	return config
 }
