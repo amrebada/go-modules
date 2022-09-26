@@ -28,8 +28,147 @@
       "description": "prod_server"
     }
   ],
-  "tags": [],
-  "paths": {},
-  "components": { "schemas": {} },
-  "ShouldGenerateSwagger": true
+  "tags": [
+    {
+      "name": "User",
+      "description": "User Module for authentication and authorization"
+    }
+  ],
+  "paths": {
+    "/v1/auth/login": {
+      "get": {
+        "summary": "Login user",
+        "description": "Login user",
+        "operationId": "V1AuthPostLogin",
+        "parameters": null,
+        "responses": null,
+        "requestBody": {
+          "description": "",
+          "required": false,
+          "content": null
+        },
+        "tags": null
+      },
+      "post": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": null,
+        "responses": null,
+        "requestBody": {
+          "description": "",
+          "required": false,
+          "content": null
+        },
+        "tags": null
+      },
+      "put": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": null,
+        "responses": null,
+        "requestBody": {
+          "description": "",
+          "required": false,
+          "content": null
+        },
+        "tags": null
+      },
+      "delete": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": null,
+        "responses": null,
+        "requestBody": {
+          "description": "",
+          "required": false,
+          "content": null
+        },
+        "tags": null
+      },
+      "patch": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": null,
+        "responses": null,
+        "requestBody": {
+          "description": "",
+          "required": false,
+          "content": null
+        },
+        "tags": null
+      }
+    },
+    "/v1/auth/register": {
+      "get": {
+        "summary": "Register user",
+        "description": "Register user",
+        "operationId": "V1AuthPostRegister",
+        "parameters": null,
+        "responses": null,
+        "requestBody": {
+          "description": "",
+          "required": false,
+          "content": null
+        },
+        "tags": null
+      },
+      "post": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": null,
+        "responses": null,
+        "requestBody": {
+          "description": "",
+          "required": false,
+          "content": null
+        },
+        "tags": null
+      },
+      "put": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": null,
+        "responses": null,
+        "requestBody": {
+          "description": "",
+          "required": false,
+          "content": null
+        },
+        "tags": null
+      },
+      "delete": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": null,
+        "responses": null,
+        "requestBody": {
+          "description": "",
+          "required": false,
+          "content": null
+        },
+        "tags": null
+      },
+      "patch": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": null,
+        "responses": null,
+        "requestBody": {
+          "description": "",
+          "required": false,
+          "content": null
+        },
+        "tags": null
+      }
+    }
+  },
+  "components": { "schemas": {} }
 }

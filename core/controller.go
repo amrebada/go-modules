@@ -61,6 +61,31 @@ func (h *Handler) SetResponseDto(responseDto interface{}) *Handler {
 	return h
 }
 
+func (h *Handler) GenerateSwagger(controllerName string, version string, controllerPath string) {
+	fmt.Println("    H", generate, " Swagger for handler: ", h.Path)
+	/**
+	Summary     string                     `json:"summary"`
+	Description string                     `json:"description"`
+	OperationId string                     `json:"operationId"`
+	Parameters  []SwaggerParameter         `json:"parameters"`
+	Responses   map[string]SwaggerResponse `json:"responses"`
+	RequestBody SwaggerRequestBody         `json:"requestBody"`
+	Tags        []string                   `json:"tags"`
+	*/
+	operationId := GenerateOperationId(h.Path, controllerName, h.Method, version)
+	pathItem := SwaggerPathItem{
+		Summary:     h.Description,
+		Description: h.Description,
+		OperationId: operationId,
+	}
+	path := SwaggerPath{
+		Get: pathItem,
+	}
+
+	swaggerInstance.Paths[GenerateFullPath(h.Path, version, controllerPath)] = path
+
+}
+
 /**
 - Base controller
 - with Builder pattern
@@ -109,7 +134,6 @@ func (c *Controller) RegisterRoutes(e *gin.Engine) {
 func (c *Controller) GenerateSwagger(moduleName string) {
 	fmt.Println("  C", generate, " Swagger for controller: ", c.Name)
 	for _, h := range c.Handlers {
-		fmt.Println("    H", generate, " Swagger for handler: ", h.Path)
-
+		h.GenerateSwagger(c.Name, c.Version, c.Path)
 	}
 }

@@ -1,5 +1,7 @@
 dev:
 	nodemon --exec go run main.go -env dev --signal SIGTERM
+swagger:
+	go run main.go -sw
 test:
 	go test ./...
 migrate:

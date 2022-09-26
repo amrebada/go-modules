@@ -10,6 +10,7 @@ type Entity = interface{}
 
 type Module struct {
 	Name        string
+	Description string
 	Controllers []*Controller
 	Imports     []*Module
 	Entities    []Entity
@@ -22,6 +23,11 @@ func NewModule() *Module {
 
 func (m *Module) SetName(name string) *Module {
 	m.Name = name
+	return m
+}
+
+func (m *Module) SetDescription(description string) *Module {
+	m.Description = description
 	return m
 }
 
@@ -64,7 +70,7 @@ func (m *Module) Migrate() error {
 }
 
 func (m *Module) RegisterRoutes(e *gin.Engine) {
-	fmt.Println(" M", register, " NewModule: ", m.Name)
+	fmt.Println("M", register, " NewModule: ", m.Name)
 	for _, c := range m.Controllers {
 		fmt.Println("   C", register, " NewController: ", c.Path)
 		c.RegisterRoutes(e)
@@ -72,7 +78,6 @@ func (m *Module) RegisterRoutes(e *gin.Engine) {
 	m.GenerateSwagger()
 	for _, imported := range m.Imports {
 		imported.RegisterRoutes(e)
-		imported.GenerateSwagger()
 	}
 }
 
@@ -80,5 +85,10 @@ func (m *Module) GenerateSwagger() {
 	fmt.Println("M", generate, " Swagger for module: ", m.Name)
 	for _, c := range m.Controllers {
 		c.GenerateSwagger(m.Name)
+		description := m.Description
+		if description == "" {
+			description = "Main Module Description"
+		}
+		swaggerInstance.Tags = append(swaggerInstance.Tags, SwaggerTag{Name: m.Name, Description: description})
 	}
 }

@@ -15,7 +15,7 @@ type Swagger struct {
 	Tags                  []SwaggerTag           `json:"tags"`
 	Paths                 map[string]SwaggerPath `json:"paths"`
 	Components            SwaggerComponent       `json:"components"`
-	ShouldGenerateSwagger bool
+	ShouldGenerateSwagger bool                   `json:"-"`
 }
 
 func (s *Swagger) SetInfo(info SwaggerInfo) *Swagger {
@@ -62,6 +62,7 @@ func (s *Swagger) GenerateSwagger() {
 			fmt.Printf("Error getting current directory: %s\n", err)
 		}
 		fmt.Printf("Swagger file generated at %s/swagger.json\n", dir)
+		os.Exit(0)
 	}
 }
 

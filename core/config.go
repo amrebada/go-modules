@@ -47,7 +47,7 @@ func NewConfig(env Stage) *Config {
 		db_name := os.Getenv("DB_NAME")
 		jwt_secret := os.Getenv("JWT_SECRET")
 
-		return &Config{
+		config = &Config{
 			InternalSecret: "secret",
 			Port:           port,
 			Database: DatabaseConfig{

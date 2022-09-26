@@ -64,7 +64,6 @@ func (s *Server) RegisterMainModule() {
 			URL:         "https://www.tradeling.com/api/module-templates",
 			Description: "prod_server",
 		}).SetShouldGenerateSwagger(config.IS_SWAGGER)
-
 	s.MainModule.RegisterRoutes(s.Engine)
 
 	swagger.GenerateSwagger()
