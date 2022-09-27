@@ -63,7 +63,7 @@ func (h *Handler) SetResponseDto(responseDto interface{}) *Handler {
 }
 
 func (h *Handler) GenerateSwagger(controllerName string, version string, controllerPath string, moduleName string) {
-	fmt.Println("    H", generate, " Swagger for handler: ", h.Path)
+	fmt.Println("    H", generate, " Swagger for handler", GetStatusString(h.Method), ":", h.Path)
 	/**
 	Summary     string                     `json:"summary"`
 	Description string                     `json:"description"`
@@ -136,7 +136,7 @@ func (c *Controller) AddHandler(h *Handler) *Controller {
 func (c *Controller) RegisterRoutes(e *gin.Engine) {
 	for _, h := range c.Handlers {
 		full_path := path.Join(c.Version, c.Path, h.Path)
-		fmt.Println("    H", register, " NewHandler: ", full_path)
+		fmt.Println("    H", register, " NewHandler: ", GetStatusString(h.Method), full_path)
 		h.Middleware = append(h.Middleware, h.HandlerFunc)
 		e.Handle(strings.ToUpper(string(h.Method)), full_path, h.Middleware...)
 	}

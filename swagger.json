@@ -1,1 +1,84 @@
-{"info":{"title":"Obadas Framework","description":"Obadas Framework","version":"1.0.0","contact":{"name":"Amr Abada","url":"amrebada.github.io","email":"amr.app.engine@gmail.com"}},"openapi":"3.0.2","servers":[{"url":"http://localhost/api/templates","description":"local_server"},{"url":"https://www.example-dev.com/api/templates","description":"dev_server"},{"url":"https://www.example-stage.com/api/templates","description":"stage_server"},{"url":"https://www.example-.com/api/templates","description":"prod_server"}],"tags":[{"name":"User","description":"User Module for authentication and authorization"}],"paths":{"/v1/auth/:id":{"get":{"summary":"get user","description":"get user","operationId":"V1AuthGetId","parameters":[{"name":"id","in":"path","description":"path parameter id ","required":true,"schema":{"type":"string"}}],"responses":{"200":{}},"requestBody":{"content":{}},"tags":["User"]}},"/v1/auth/login":{"post":{"summary":"Login user","description":"Login user","operationId":"V1AuthPostLogin","responses":{"200":{}},"requestBody":{"content":{}},"tags":["User"]}},"/v1/auth/register":{"post":{"summary":"Register user","description":"Register user","operationId":"V1AuthPostRegister","responses":{"200":{}},"requestBody":{"content":{}},"tags":["User"]}}},"components":{}}
+{
+  "info": {
+    "title": "Obadas Framework",
+    "description": "Obadas Framework",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Amr Abada",
+      "url": "amrebada.github.io",
+      "email": "amr.app.engine@gmail.com"
+    }
+  },
+  "openapi": "3.0.2",
+  "servers": [
+    { "url": "http://localhost/api/templates", "description": "local_server" },
+    {
+      "url": "https://www.example-dev.com/api/templates",
+      "description": "dev_server"
+    },
+    {
+      "url": "https://www.example-stage.com/api/templates",
+      "description": "stage_server"
+    },
+    {
+      "url": "https://www.example-.com/api/templates",
+      "description": "prod_server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "User Module for authentication and authorization"
+    }
+  ],
+  "paths": {
+    "/v1/auth/:id": {
+      "get": {
+        "summary": "get user",
+        "description": "get user",
+        "operationId": "V1AuthGetId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "path parameter id ",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": {} },
+        "requestBody": { "content": {} },
+        "tags": ["User"]
+      }
+    },
+    "/v1/auth/login": {
+      "get": {
+        "summary": "get token of user",
+        "description": "get token of user",
+        "operationId": "V1AuthGetLogin",
+        "responses": { "200": {} },
+        "requestBody": { "content": {} },
+        "tags": ["User"]
+      },
+      "post": {
+        "summary": "Login user",
+        "description": "Login user",
+        "operationId": "V1AuthPostLogin",
+        "responses": { "200": {} },
+        "requestBody": { "content": {} },
+        "tags": ["User"]
+      }
+    },
+    "/v1/auth/register": {
+      "post": {
+        "summary": "Register user",
+        "description": "Register user",
+        "operationId": "V1AuthPostRegister",
+        "responses": { "200": {} },
+        "requestBody": { "content": {} },
+        "tags": ["User"]
+      }
+    }
+  },
+  "components": {}
+}

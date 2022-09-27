@@ -32,6 +32,12 @@ func NewAuthController() *AuthController {
 			SetResponseDto(&LoginUserResponseDto{})).
 		AddHandler(core.NewHandler().
 			SetMethod(core.HTTP_GET_METHOD).
+			SetPath("/login").
+			SetHandlerFunc(LoginUser).
+			SetDescription("get token of user").
+			SetResponseDto(&LoginUserResponseDto{})).
+		AddHandler(core.NewHandler().
+			SetMethod(core.HTTP_GET_METHOD).
 			SetPath("/:id").
 			SetHandlerFunc(LoginUser).
 			SetDescription("get user").
