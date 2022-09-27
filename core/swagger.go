@@ -148,6 +148,22 @@ func (spi *SwaggerPathItem) AddPathParameter(parameter string) *SwaggerPathItem 
 	return spi
 }
 
+//TODO: continue
+// func (spi *SwaggerPathItem) AddQueryParameter(parameter interface{}) *SwaggerPathItem {
+
+// 	swaggerQueryParameter := SwaggerParameter{
+// 		Name:        parameter,
+// 		In:          SWAGGER_PARAMETER_TYPE_PATH,
+// 		Description: fmt.Sprintf("path parameter %s ", parameter),
+// 		Required:    true,
+// 		Schema: SwaggerSchema{
+// 			Type: SWAGGER_DATA_TYPE_STRING,
+// 		},
+// 	}
+// 	spi.Parameters = append(spi.Parameters, swaggerQueryParameter)
+// 	return spi
+// }
+
 type SwaggerResponse struct {
 	Description string                            `json:"description,omitempty"`
 	Content     map[string]SwaggerResponseContent `json:"content,omitempty"`
