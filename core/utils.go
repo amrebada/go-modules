@@ -13,14 +13,27 @@ func ErrorsToJSON(err []error) []string {
 	return errors
 }
 
-func GenerateOperationId(path string, controllerName string, method string, version string) string {
+func ExtractPathParameters(path string) []string {
+	pathParts := strings.Split(path, "/")
+	parameters := []string{}
+	for _, pathPart := range pathParts {
+		pathPart = strings.ReplaceAll(pathPart, "/", "")
+		if strings.HasPrefix(pathPart, ":") {
+			parameters = append(parameters, pathPart[1:])
+		}
+	}
+
+	return parameters
+}
+
+func GenerateOperationId(path string, controllerName string, method HttpMethods, version string) string {
 	pathParts := strings.Split(path, "/")
 	pathString := ""
 	for _, pathPart := range pathParts {
 		pathString += Capitalize(pathPart)
 	}
 
-	return fmt.Sprintf("%s%s%s%s", Capitalize(version), Capitalize(controllerName), Capitalize(method), pathString)
+	return fmt.Sprintf("%s%s%s%s", Capitalize(version), Capitalize(controllerName), Capitalize(string(method)), pathString)
 }
 
 func GenerateFullPath(path string, version string, controllerPath string) string {

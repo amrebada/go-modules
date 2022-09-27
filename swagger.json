@@ -1,30 +1,27 @@
 {
   "info": {
-    "title": "Tradeling Framework",
-    "description": "Tradeling Framework",
+    "title": "Obadas Framework",
+    "description": "Obadas Framework",
     "version": "1.0.0",
     "contact": {
       "name": "Amr Abada",
-      "url": "tradeling.com",
-      "email": "amr.ebada@tradeling.com"
+      "url": "amrebada.github.io",
+      "email": "amr.app.engine@gmail.com"
     }
   },
   "openapi": "3.0.2",
   "servers": [
+    { "url": "http://localhost/api/templates", "description": "local_server" },
     {
-      "url": "http://b2b.localhost/api/module-templates",
-      "description": "local_server"
-    },
-    {
-      "url": "https://www.tradelingdev.com/api/module-templates",
+      "url": "https://www.example-dev.com/api/templates",
       "description": "dev_server"
     },
     {
-      "url": "https://www.tradelingstage.com/api/module-templates",
+      "url": "https://www.example-stage.com/api/templates",
       "description": "stage_server"
     },
     {
-      "url": "https://www.tradeling.com/api/module-templates",
+      "url": "https://www.example-.com/api/templates",
       "description": "prod_server"
     }
   ],
@@ -35,140 +32,45 @@
     }
   ],
   "paths": {
-    "/v1/auth/login": {
+    "/v1/auth/:id": {
       "get": {
+        "summary": "get user",
+        "description": "get user",
+        "operationId": "V1AuthGet:id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "path parameter id ",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": {} },
+        "requestBody": { "content": {} },
+        "tags": ["User"]
+      }
+    },
+    "/v1/auth/login": {
+      "post": {
         "summary": "Login user",
         "description": "Login user",
         "operationId": "V1AuthPostLogin",
-        "parameters": null,
-        "responses": null,
-        "requestBody": {
-          "description": "",
-          "required": false,
-          "content": null
-        },
-        "tags": null
-      },
-      "post": {
-        "summary": "",
-        "description": "",
-        "operationId": "",
-        "parameters": null,
-        "responses": null,
-        "requestBody": {
-          "description": "",
-          "required": false,
-          "content": null
-        },
-        "tags": null
-      },
-      "put": {
-        "summary": "",
-        "description": "",
-        "operationId": "",
-        "parameters": null,
-        "responses": null,
-        "requestBody": {
-          "description": "",
-          "required": false,
-          "content": null
-        },
-        "tags": null
-      },
-      "delete": {
-        "summary": "",
-        "description": "",
-        "operationId": "",
-        "parameters": null,
-        "responses": null,
-        "requestBody": {
-          "description": "",
-          "required": false,
-          "content": null
-        },
-        "tags": null
-      },
-      "patch": {
-        "summary": "",
-        "description": "",
-        "operationId": "",
-        "parameters": null,
-        "responses": null,
-        "requestBody": {
-          "description": "",
-          "required": false,
-          "content": null
-        },
-        "tags": null
+        "responses": { "200": {} },
+        "requestBody": { "content": {} },
+        "tags": ["User"]
       }
     },
     "/v1/auth/register": {
-      "get": {
+      "post": {
         "summary": "Register user",
         "description": "Register user",
         "operationId": "V1AuthPostRegister",
-        "parameters": null,
-        "responses": null,
-        "requestBody": {
-          "description": "",
-          "required": false,
-          "content": null
-        },
-        "tags": null
-      },
-      "post": {
-        "summary": "",
-        "description": "",
-        "operationId": "",
-        "parameters": null,
-        "responses": null,
-        "requestBody": {
-          "description": "",
-          "required": false,
-          "content": null
-        },
-        "tags": null
-      },
-      "put": {
-        "summary": "",
-        "description": "",
-        "operationId": "",
-        "parameters": null,
-        "responses": null,
-        "requestBody": {
-          "description": "",
-          "required": false,
-          "content": null
-        },
-        "tags": null
-      },
-      "delete": {
-        "summary": "",
-        "description": "",
-        "operationId": "",
-        "parameters": null,
-        "responses": null,
-        "requestBody": {
-          "description": "",
-          "required": false,
-          "content": null
-        },
-        "tags": null
-      },
-      "patch": {
-        "summary": "",
-        "description": "",
-        "operationId": "",
-        "parameters": null,
-        "responses": null,
-        "requestBody": {
-          "description": "",
-          "required": false,
-          "content": null
-        },
-        "tags": null
+        "responses": { "200": {} },
+        "requestBody": { "content": {} },
+        "tags": ["User"]
       }
     }
   },
-  "components": { "schemas": {} }
+  "components": {}
 }

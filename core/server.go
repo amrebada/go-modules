@@ -39,29 +39,29 @@ func (s *Server) RegisterMainModule() {
 
 	swagger := NewSwagger().
 		SetInfo(SwaggerInfo{
-			Title:       "Tradeling Framework",
-			Description: "Tradeling Framework",
+			Title:       "Obadas Framework",
+			Description: "Obadas Framework",
 			Version:     "1.0.0",
 			Contact: SwaggerContact{
 				Name:  "Amr Abada",
-				Email: "amr.ebada@tradeling.com",
-				URL:   "tradeling.com",
+				Email: "amr.app.engine@gmail.com",
+				URL:   "amrebada.github.io",
 			},
 		}).
 		AddServer(SwaggerServer{
-			URL:         "http://b2b.localhost/api/module-templates",
+			URL:         "http://localhost/api/templates",
 			Description: "local_server",
 		}).
 		AddServer(SwaggerServer{
-			URL:         "https://www.tradelingdev.com/api/module-templates",
+			URL:         "https://www.example-dev.com/api/templates",
 			Description: "dev_server",
 		}).
 		AddServer(SwaggerServer{
-			URL:         "https://www.tradelingstage.com/api/module-templates",
+			URL:         "https://www.example-stage.com/api/templates",
 			Description: "stage_server",
 		}).
 		AddServer(SwaggerServer{
-			URL:         "https://www.tradeling.com/api/module-templates",
+			URL:         "https://www.example-.com/api/templates",
 			Description: "prod_server",
 		}).SetShouldGenerateSwagger(config.IS_SWAGGER)
 	s.MainModule.RegisterRoutes(s.Engine)

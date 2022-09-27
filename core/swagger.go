@@ -11,10 +11,10 @@ import (
 type Swagger struct {
 	Info                  SwaggerInfo            `json:"info"`
 	OpenApi               string                 `json:"openapi"`
-	Servers               []SwaggerServer        `json:"servers"`
-	Tags                  []SwaggerTag           `json:"tags"`
-	Paths                 map[string]SwaggerPath `json:"paths"`
-	Components            SwaggerComponent       `json:"components"`
+	Servers               []SwaggerServer        `json:"servers,omitempty"`
+	Tags                  []SwaggerTag           `json:"tags,omitempty"`
+	Paths                 map[string]SwaggerPath `json:"paths,omitempty"`
+	Components            SwaggerComponent       `json:"components,omitempty"`
 	ShouldGenerateSwagger bool                   `json:"-"`
 }
 
@@ -85,91 +85,132 @@ func NewSwagger() *Swagger {
 }
 
 type SwaggerInfo struct {
-	Title       string         `json:"title"`
-	Description string         `json:"description"`
-	Version     string         `json:"version"`
-	Contact     SwaggerContact `json:"contact"`
+	Title       string         `json:"title,omitempty"`
+	Description string         `json:"description,omitempty"`
+	Version     string         `json:"version,omitempty"`
+	Contact     SwaggerContact `json:"contact,omitempty"`
 }
 
 type SwaggerContact struct {
-	Name  string `json:"name"`
-	URL   string `json:"url"`
-	Email string `json:"email"`
+	Name  string `json:"name,omitempty"`
+	URL   string `json:"url,omitempty"`
+	Email string `json:"email,omitempty"`
 }
 
 type SwaggerServer struct {
 	URL         string `json:"url"`
-	Description string `json:"description"`
+	Description string `json:"description,omitempty"`
 }
 
 type SwaggerTag struct {
 	Name        string `json:"name"`
-	Description string `json:"description"`
+	Description string `json:"description,omitempty"`
 }
 
-type SwaggerPath struct {
-	Get    SwaggerPathItem `json:"get"`
-	Post   SwaggerPathItem `json:"post"`
-	Put    SwaggerPathItem `json:"put"`
-	Delete SwaggerPathItem `json:"delete"`
-	Patch  SwaggerPathItem `json:"patch"`
-}
+type HttpMethods string
+
+const (
+	HTTP_GET_METHOD    HttpMethods = "get"
+	HTTP_POST_METHOD   HttpMethods = "post"
+	HTTP_DELETE_METHOD HttpMethods = "delete"
+	HTTP_PUT_METHOD    HttpMethods = "put"
+	HTTP_PATCH_METHOD  HttpMethods = "patch"
+)
+
+type SwaggerPath = map[HttpMethods]SwaggerPathItem
 
 type SwaggerPathItem struct {
-	Summary     string                     `json:"summary"`
-	Description string                     `json:"description"`
-	OperationId string                     `json:"operationId"`
-	Parameters  []SwaggerParameter         `json:"parameters"`
-	Responses   map[string]SwaggerResponse `json:"responses"`
-	RequestBody SwaggerRequestBody         `json:"requestBody"`
-	Tags        []string                   `json:"tags"`
+	Summary     string                             `json:"summary"`
+	Description string                             `json:"description,omitempty"`
+	OperationId string                             `json:"operationId,omitempty"`
+	Parameters  []SwaggerParameter                 `json:"parameters,omitempty"`
+	Responses   map[HttpStatusCode]SwaggerResponse `json:"responses"`
+	RequestBody SwaggerRequestBody                 `json:"requestBody,omitempty"`
+	Tags        []string                           `json:"tags"`
 }
+
+func (spi *SwaggerPathItem) AddParameter(parameter SwaggerParameter) *SwaggerPathItem {
+	spi.Parameters = append(spi.Parameters, parameter)
+	return spi
+}
+
+func (spi *SwaggerPathItem) AddPathParameter(parameter string) *SwaggerPathItem {
+	swaggerPathParameter := SwaggerParameter{
+		Name:        parameter,
+		In:          SWAGGER_PARAMETER_TYPE_PATH,
+		Description: fmt.Sprintf("path parameter %s ", parameter),
+		Required:    true,
+		Schema: SwaggerSchema{
+			Type: SWAGGER_DATA_TYPE_STRING,
+		},
+	}
+	spi.Parameters = append(spi.Parameters, swaggerPathParameter)
+	return spi
+}
+
 type SwaggerResponse struct {
-	Description string                            `json:"description"`
-	Content     map[string]SwaggerResponseContent `json:"content"`
+	Description string                            `json:"description,omitempty"`
+	Content     map[string]SwaggerResponseContent `json:"content,omitempty"`
 }
 
 type SwaggerRequestBody struct {
-	Description string                            `json:"description"`
-	Required    bool                              `json:"required"`
+	Description string                            `json:"description,omitempty"`
+	Required    bool                              `json:"required,omitempty"`
 	Content     map[string]SwaggerResponseContent `json:"content"`
 }
+type SwaggerParameterType string
+
+const (
+	SWAGGER_PARAMETER_TYPE_PATH   SwaggerParameterType = "path"
+	SWAGGER_PARAMETER_TYPE_QUERY  SwaggerParameterType = "query"
+	SWAGGER_PARAMETER_TYPE_HEADER SwaggerParameterType = "header"
+)
 
 type SwaggerParameter struct {
-	Name        string        `json:"name"`
-	In          string        `json:"in"`
-	Description string        `json:"description"`
-	Required    bool          `json:"required"`
-	Schema      SwaggerSchema `json:"schema"`
+	Name        string               `json:"name"`
+	In          SwaggerParameterType `json:"in"`
+	Description string               `json:"description,omitempty"`
+	Required    bool                 `json:"required"`
+	Schema      SwaggerSchema        `json:"schema"`
 }
 
 type SwaggerSchema struct {
-	Type       string                 `json:"type"`
-	Properties map[string]interface{} `json:"properties"`
-	Items      map[string]interface{} `json:"items"`
-	Required   []string               `json:"required"`
-	Ref        string                 `json:"$ref"`
+	Type       SwaggerDataType        `json:"type"`
+	Properties map[string]interface{} `json:"properties,omitempty"`
+	Items      map[string]interface{} `json:"items,omitempty"`
+	Required   []string               `json:"required,omitempty"`
+	Ref        string                 `json:"$ref,omitempty"`
 }
 
 type SwaggerResponseContent struct {
 }
 
 type SwaggerComponent struct {
-	Schemas map[string]SwaggerSchema `json:"schemas"`
+	Schemas map[string]SwaggerSchema `json:"schemas,omitempty"`
 }
 
 func (c *SwaggerComponent) AddSchema(schema SwaggerSchema) {
 	c.Schemas[schema.Ref] = schema
 }
 
+type SwaggerDataType string
+
+const (
+	SWAGGER_DATA_TYPE_OBJECT  SwaggerDataType = "object"
+	SWAGGER_DATA_TYPE_ARRAY   SwaggerDataType = "array"
+	SWAGGER_DATA_TYPE_STRING  SwaggerDataType = "string"
+	SWAGGER_DATA_TYPE_NUMBER  SwaggerDataType = "number"
+	SWAGGER_DATA_TYPE_BOOLEAN SwaggerDataType = "boolean"
+)
+
 type SwaggerObject struct {
-	Type       string                 `json:"type"`
+	Type       SwaggerDataType        `json:"type"`
 	Properties map[string]interface{} `json:"properties"`
-	Required   []string               `json:"required"`
+	Required   []string               `json:"required,omitempty"`
 }
 
 func NewSwaggerObject() *SwaggerObject {
-	return &SwaggerObject{Type: "object"}
+	return &SwaggerObject{Type: SWAGGER_DATA_TYPE_OBJECT}
 }
 
 func (so *SwaggerObject) AddProperty(name string, objType interface{}, isRequired bool) *SwaggerObject {
@@ -181,12 +222,12 @@ func (so *SwaggerObject) AddProperty(name string, objType interface{}, isRequire
 }
 
 type SwaggerArray struct {
-	Type  string        `json:"type"`
-	Items []interface{} `json:"items"`
+	Type  SwaggerDataType `json:"type"`
+	Items []interface{}   `json:"items"`
 }
 
 func NewSwaggerArray() *SwaggerArray {
-	return &SwaggerArray{Type: "array"}
+	return &SwaggerArray{Type: SWAGGER_DATA_TYPE_ARRAY}
 }
 
 func (sa *SwaggerArray) AddItem(item interface{}) *SwaggerArray {
@@ -197,15 +238,15 @@ func (sa *SwaggerArray) AddItem(item interface{}) *SwaggerArray {
 func GetSwaggerType(sType string) interface{} {
 	switch sType {
 	case "string":
-		return SwaggerObject{Type: "string"}
+		return SwaggerObject{Type: SWAGGER_DATA_TYPE_STRING}
 	case "int", "int32", "int64", "uint", "uint32", "uint64", "float32", "float64":
-		return SwaggerObject{Type: "number"}
+		return SwaggerObject{Type: SWAGGER_DATA_TYPE_NUMBER}
 	case "bool":
-		return SwaggerObject{Type: "boolean"}
+		return SwaggerObject{Type: SWAGGER_DATA_TYPE_BOOLEAN}
 	case "array":
-		return SwaggerArray{Type: "array"}
+		return SwaggerArray{Type: SWAGGER_DATA_TYPE_ARRAY}
 	case "struct":
-		return SwaggerObject{Type: "object"}
+		return SwaggerObject{Type: SWAGGER_DATA_TYPE_OBJECT}
 	default:
 		return nil
 	}
