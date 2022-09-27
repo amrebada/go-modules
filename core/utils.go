@@ -30,7 +30,7 @@ func GenerateOperationId(path string, controllerName string, method HttpMethods,
 	pathParts := strings.Split(path, "/")
 	pathString := ""
 	for _, pathPart := range pathParts {
-		pathString += Capitalize(pathPart)
+		pathString += Capitalize(strings.ReplaceAll(pathPart, ":", ""))
 	}
 
 	return fmt.Sprintf("%s%s%s%s", Capitalize(version), Capitalize(controllerName), Capitalize(string(method)), pathString)
