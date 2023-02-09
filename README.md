@@ -23,3 +23,8 @@
 - run database migration: `make migrate`
 - run tests: `make test`
 - generate swagger file: `make swagger` *comming soon*
+
+
+## Contribution
+
+We'd love ❤️ for you to contribute to this boilerplate. You can request new features by creating an [issue](https://github.com/amrebada/go-modules/issues), or submit a [pull request](https://github.com/amrebada/go-modules/pulls) with your contribution.
