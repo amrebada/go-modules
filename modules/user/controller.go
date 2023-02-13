@@ -3,9 +3,9 @@ package user
 import (
 	"fmt"
 
-	"github.com/amrebada/go-template/core"
-	"github.com/amrebada/go-template/home"
-	"github.com/gin-gonic/gin"
+	"github.com/amrebada/go-modules/core"
+	"github.com/amrebada/go-modules/home"
+	"github.com/gofiber/fiber/v2"
 )
 
 type AuthController = core.Controller
@@ -39,49 +39,58 @@ func NewAuthController() *AuthController {
 		AddHandler(core.NewHandler().
 			SetMethod(core.HTTP_GET_METHOD).
 			SetPath("/:id").
-			SetHandlerFunc(LoginUser).
+			SetHandlerFunc(GetUser).
 			SetDescription("get user").
 			SetResponseDto(&UserEntity{}))
 }
 
-//Login user
-func RegisterUser(ctx *gin.Context) {
+// Login user
+func RegisterUser(ctx *fiber.Ctx) error {
 	registerDto := &RegisterDto{}
-	err := ctx.ShouldBindJSON(registerDto)
+	err := ctx.BodyParser(registerDto)
 	if err != nil {
-		ctx.JSON(400, home.ErrorResponse([]error{err}, home.CANNOT_PARSE_BODY))
-		return
+		ctx.Status(400).JSON(home.ErrorResponse([]error{err}, home.CANNOT_PARSE_BODY))
+		return err
 	}
 	user, err := Register(registerDto)
 	if err != nil {
-		ctx.JSON(401, home.ErrorResponse([]error{err}, home.OAUTH_TOKEN_NOT_CORRECT))
-		return
+		ctx.Status(401).JSON(home.ErrorResponse([]error{err}, home.OAUTH_TOKEN_NOT_CORRECT))
+		return err
 	}
-	ctx.JSON(200, user)
+	ctx.Status(200).JSON(user)
+	return nil
 }
 
-func LoginUser(ctx *gin.Context) {
+func LoginUser(ctx *fiber.Ctx) error {
 	findUserDto := &LoginUserDto{}
-	err := ctx.ShouldBindQuery(findUserDto)
+	err := ctx.BodyParser(findUserDto)
 	if err != nil {
-		ctx.JSON(400, home.ErrorResponse([]error{err}, home.CANNOT_PARSE_BODY))
-		return
+		ctx.Status(400).JSON(home.ErrorResponse([]error{err}, home.CANNOT_PARSE_BODY))
+		return err
 	}
 	fmt.Println(findUserDto)
-	// users, err := Search(findUserDto)
-	// if err != nil {
-	// 	ctx.JSON(500, home.ErrorResponse([]error{err}, home.USER_SERVER_ERROR))
-	// 	return
-	// }
-	// ctx.JSON(200, users)
+	return nil
 }
-func GetUser(ctx *gin.Context) {
-	id := ctx.Param("id")
-	fmt.Println(id)
-	// users, err := Search(findUserDto)
-	// if err != nil {
-	// 	ctx.JSON(500, home.ErrorResponse([]error{err}, home.USER_SERVER_ERROR))
-	// 	return
-	// }
-	// ctx.JSON(200, users)
+
+type QueryStruct struct {
+	Q      string   `json:"q"`
+	Filter []string `json:"filter"`
+}
+type ParamStruct struct {
+	ID string `json:"id"`
+}
+
+func GetUser(ctx *fiber.Ctx) error {
+	params := ParamStruct{}
+	err := ctx.ParamsParser(&params)
+	query := QueryStruct{}
+	err = ctx.QueryParser(&query)
+	if err != nil {
+		return err
+	}
+	ctx.Status(200).JSON(map[string]interface{}{
+		"path":  params,
+		"query": query,
+	})
+	return nil
 }

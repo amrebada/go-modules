@@ -3,7 +3,7 @@ package company
 import (
 	"errors"
 
-	"github.com/amrebada/go-template/core"
+	"github.com/amrebada/go-modules/core"
 )
 
 func CreateCompany(companyDto *CreateCompanyDto) (*CreateCompanyResponseDto, error) {

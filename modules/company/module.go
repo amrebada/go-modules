@@ -1,6 +1,6 @@
 package company
 
-import "github.com/amrebada/go-template/core"
+import "github.com/amrebada/go-modules/core"
 
 type CompanyModule = core.Module
 

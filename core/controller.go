@@ -5,7 +5,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
 /**
@@ -16,8 +16,8 @@ import (
 type Handler struct {
 	Method      HttpMethods
 	Path        string
-	Middleware  []gin.HandlerFunc
-	HandlerFunc gin.HandlerFunc
+	Middleware  []FiberHandler
+	HandlerFunc FiberHandler
 	RequestDto  interface{}
 	ResponseDto interface{}
 	Description string
@@ -37,12 +37,12 @@ func (h *Handler) SetPath(path string) *Handler {
 	return h
 }
 
-func (h *Handler) AddMiddleware(m ...gin.HandlerFunc) *Handler {
+func (h *Handler) AddMiddleware(m ...FiberHandler) *Handler {
 	h.Middleware = append(h.Middleware, m...)
 	return h
 }
 
-func (h *Handler) SetHandlerFunc(handlerFunc gin.HandlerFunc) *Handler {
+func (h *Handler) SetHandlerFunc(handlerFunc FiberHandler) *Handler {
 	h.HandlerFunc = handlerFunc
 	return h
 }
@@ -133,12 +133,12 @@ func (c *Controller) AddHandler(h *Handler) *Controller {
 	return c
 }
 
-func (c *Controller) RegisterRoutes(e *gin.Engine) {
+func (c *Controller) RegisterRoutes(e *fiber.App) {
 	for _, h := range c.Handlers {
 		full_path := path.Join(c.Version, c.Path, h.Path)
 		fmt.Println("    H", register, " NewHandler: ", GetStatusString(h.Method), full_path)
 		h.Middleware = append(h.Middleware, h.HandlerFunc)
-		e.Handle(strings.ToUpper(string(h.Method)), full_path, h.Middleware...)
+		e.Add(strings.ToUpper(string(h.Method)), full_path, h.Middleware...)
 	}
 }
 

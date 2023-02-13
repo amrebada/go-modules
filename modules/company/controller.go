@@ -1,7 +1,7 @@
 package company
 
 import (
-	"github.com/amrebada/go-template/core"
+	"github.com/amrebada/go-modules/core"
 )
 
 type CompanyController = core.Controller

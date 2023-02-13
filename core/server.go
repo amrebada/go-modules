@@ -2,30 +2,27 @@ package core
 
 import (
 	"fmt"
-	"net/http"
+	"strings"
 	"time"
 
-	"github.com/gin-gonic/gin"
+	fiber "github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
+	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
 )
 
 type Server struct {
-	Port             int
-	Engine           *gin.Engine
-	TimeoutInSeconds int
-	MaxHeaderBytes   int
-	MainModule       *Module
-	DB               *Database
+	Port       int
+	Engine     *fiber.App
+	MainModule *Module
+	DB         *Database
 }
 
 func (s *Server) Start() error {
-	h := &http.Server{
-		Addr:           fmt.Sprintf(":%d", s.Port),
-		Handler:        s.Engine,
-		ReadTimeout:    time.Duration(s.TimeoutInSeconds) * time.Second,
-		WriteTimeout:   time.Duration(s.TimeoutInSeconds) * time.Second,
-		MaxHeaderBytes: s.MaxHeaderBytes,
-	}
-	return h.ListenAndServe()
+	return s.Engine.Listen(fmt.Sprintf(":%v", s.Port))
 }
 
 func (s *Server) RegisterMainModule() {
@@ -80,32 +77,57 @@ func printAbout() {
 
 }
 
+const (
+	TimeoutInSeconds = 10
+)
+
+func ErrorHandler(ctx *fiber.Ctx, err error) error {
+	response := map[string]interface{}{
+		"error":   true,
+		"message": "Internal Server Error"}
+	fmt.Printf("Error: on %v with method %v: %v\n", ctx.Route().Path, ctx.Route().Method, err)
+	if ConfigInstance().Env != Production {
+		response["details"] = err.Error()
+	}
+	ctx.Status(500).JSON(response)
+	return nil
+}
+
 func NewServer() *Server {
 	if server == nil {
 		printAbout()
-		gin.SetMode(gin.ReleaseMode)
-		engine := gin.New()
-		engine.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
-			return fmt.Sprintf("%s x-trace-id %s \"%s%s%s %s %s %s%d%s %s \"%s\" %s\" %s\n",
-				param.TimeStamp.Format(time.RFC3339),
-				param.Request.Header.Get("x-trace-id"),
-				param.MethodColor(), param.Method, param.ResetColor(),
-				param.Path,
-				param.Request.Proto,
-				param.StatusCodeColor(), param.StatusCode, param.ResetColor(),
-				param.Latency,
-				param.Request.RemoteAddr,
-				param.Request.UserAgent(),
-				param.ErrorMessage,
-			)
+
+		engine := fiber.New(fiber.Config{
+			AppName:               ConfigInstance().AppName,
+			ReadTimeout:           time.Duration(TimeoutInSeconds) * time.Second,
+			WriteTimeout:          time.Duration(TimeoutInSeconds) * time.Second,
+			ErrorHandler:          ErrorHandler,
+			DisableStartupMessage: true,
+		})
+		engine.Use(recover.New(recover.Config{
+			EnableStackTrace: true,
 		}))
-		engine.Use(gin.Recovery())
+
+		engine.Use(compress.New())
+		engine.Use(limiter.New(limiter.Config{
+			Max:               20,
+			Expiration:        30 * time.Second,
+			LimiterMiddleware: limiter.SlidingWindow{},
+		}))
+		engine.Get("/server/metrics", monitor.New(monitor.Config{
+			Title:   fmt.Sprintf("%s Metrics Page", strings.ToUpper(ConfigInstance().AppName)),
+			Refresh: 1 * time.Second,
+		}))
+
+		engine.Use(requestid.New())
+		engine.Use(logger.New(logger.Config{
+			Format: "[${time}] x-request-id ${locals:requestid} ${method} ${path} ${status}  - ${latency} ${ip} ${ua} - ${error} \n",
+		}))
+
 		server = &Server{
-			Port:             ConfigInstance().Port,
-			Engine:           engine,
-			TimeoutInSeconds: 10,
-			MaxHeaderBytes:   1 << 20, // shift binary 1 by 20  = 131kb
-			DB:               NewDatabase(),
+			Port:   ConfigInstance().Port,
+			Engine: engine,
+			DB:     NewDatabase(),
 		}
 		fmt.Printf("%s Server starting on Port %d\n", starting, server.Port)
 	}

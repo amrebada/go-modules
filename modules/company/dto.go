@@ -1,6 +1,6 @@
 package company
 
-import "github.com/amrebada/go-template/modules/user"
+import "github.com/amrebada/go-modules/modules/user"
 
 // Create DTO
 type CreateCompanyDto struct {
@@ -22,7 +22,7 @@ type GetCompanyResponseDto struct {
 	Users   []user.UserEntity `json:"users"`
 }
 
-//Search DTO
+// Search DTO
 type SearchCompanyByNameDto struct {
 	Name  string `json:"name" binding:"max=255"`
 	Page  int    `json:"page" binding:"default=1"`

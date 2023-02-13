@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/amrebada/go-template/core"
-	"github.com/amrebada/go-template/modules/user"
+	"github.com/amrebada/go-modules/core"
+	"github.com/amrebada/go-modules/modules/user"
 	"gorm.io/gorm"
 )
 

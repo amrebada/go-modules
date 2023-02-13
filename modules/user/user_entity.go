@@ -3,7 +3,7 @@ package user
 import (
 	"strings"
 
-	"github.com/amrebada/go-template/core"
+	"github.com/amrebada/go-modules/core"
 	"gorm.io/gorm"
 )
 

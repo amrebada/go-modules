@@ -3,7 +3,7 @@ package core
 import (
 	"fmt"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
 type Entity = interface{}
@@ -69,7 +69,7 @@ func (m *Module) Migrate() error {
 	return nil
 }
 
-func (m *Module) RegisterRoutes(e *gin.Engine) {
+func (m *Module) RegisterRoutes(e *fiber.App) {
 	fmt.Println("M", register, " NewModule: ", m.Name)
 	for _, c := range m.Controllers {
 		fmt.Println("   C", register, " NewController: ", c.Path)

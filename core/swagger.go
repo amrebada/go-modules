@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reflect"
 )
 
 type Swagger struct {
@@ -221,7 +222,7 @@ const (
 
 type SwaggerObject struct {
 	Type       SwaggerDataType        `json:"type"`
-	Properties map[string]interface{} `json:"properties"`
+	Properties map[string]interface{} `json:"properties,omitempty"`
 	Required   []string               `json:"required,omitempty"`
 }
 
@@ -251,20 +252,36 @@ func (sa *SwaggerArray) AddItem(item interface{}) *SwaggerArray {
 	return sa
 }
 
-func GetSwaggerType(sType string) interface{} {
+func GetSwaggerObjectType(sType reflect.Kind) interface{} {
 	switch sType {
-	case "string":
+	case reflect.String:
 		return SwaggerObject{Type: SWAGGER_DATA_TYPE_STRING}
-	case "int", "int32", "int64", "uint", "uint32", "uint64", "float32", "float64":
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Float32, reflect.Float64:
 		return SwaggerObject{Type: SWAGGER_DATA_TYPE_NUMBER}
-	case "bool":
+	case reflect.Bool:
 		return SwaggerObject{Type: SWAGGER_DATA_TYPE_BOOLEAN}
-	case "array":
+	case reflect.Array, reflect.Slice:
 		return SwaggerArray{Type: SWAGGER_DATA_TYPE_ARRAY}
-	case "struct":
+	case reflect.Struct, reflect.Map, reflect.Interface:
 		return SwaggerObject{Type: SWAGGER_DATA_TYPE_OBJECT}
 	default:
 		return nil
+	}
+}
+func GetSwaggerType(sType reflect.Kind) SwaggerDataType {
+	switch sType {
+	case reflect.String:
+		return SWAGGER_DATA_TYPE_STRING
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Float32, reflect.Float64:
+		return SWAGGER_DATA_TYPE_NUMBER
+	case reflect.Bool:
+		return SWAGGER_DATA_TYPE_BOOLEAN
+	case reflect.Array, reflect.Slice:
+		return SWAGGER_DATA_TYPE_ARRAY
+	case reflect.Struct, reflect.Map, reflect.Interface:
+		return SWAGGER_DATA_TYPE_OBJECT
+	default:
+		return SWAGGER_DATA_TYPE_OBJECT
 	}
 }
 
@@ -275,4 +292,29 @@ func IsSwaggerArray(obj interface{}) bool {
 	default:
 		return false
 	}
+}
+
+type Schemas = map[string]SwaggerSchema
+
+func ConvertToSchema(obj interface{}, schemas Schemas) Schemas {
+	objType := reflect.TypeOf(obj)
+	schema := SwaggerSchema{
+		Type: GetSwaggerType(objType.Kind()),
+	}
+
+	// if objType.Kind() == reflect.Struct {
+	// 	for i := 0; i < objType.NumField(); i++ {
+	// 		fmt.Printf("\tField %s: %s\n", objType.Field(i).Name, objType.Field(i).Type.Kind().String())
+	// 	}
+	// }
+
+	// // typeInObject := GetSwaggerObjectType(objType.Kind())
+	// typeInBytes, err := json.MarshalIndent(schema, "", "  ")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	schemas[objType.Name()] = schema
+
+	return schemas
 }

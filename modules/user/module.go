@@ -1,6 +1,6 @@
 package user
 
-import "github.com/amrebada/go-template/core"
+import "github.com/amrebada/go-modules/core"
 
 type UserModule = core.Module
 

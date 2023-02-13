@@ -1,9 +1,10 @@
-module github.com/amrebada/go-template
+module github.com/amrebada/go-modules
 
 go 1.16
 
 require (
 	github.com/gin-gonic/gin v1.7.7
+	github.com/gofiber/fiber/v2 v2.38.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/google/go-cmp v0.5.1 // indirect

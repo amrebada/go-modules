@@ -14,12 +14,14 @@ type DatabaseConfig struct {
 }
 
 type Config struct {
+	AppName        string
 	InternalSecret string
 	Port           int
 	Database       DatabaseConfig
 	JWT_SECRET     string
 	IS_MIGRATE     bool
 	IS_SWAGGER     bool
+	Env            Stage
 }
 
 func (c *Config) SetMigrate(isMigrate bool) *Config {
@@ -47,8 +49,17 @@ func NewConfig(env Stage) *Config {
 		db_name := os.Getenv("DB_NAME")
 		jwt_secret := os.Getenv("JWT_SECRET")
 
+		internal_secret := os.Getenv("INTERNAL_SECRET")
+
+		app_name := os.Getenv("APP_NAME")
+
+		if app_name == "" {
+			app_name = "go_template"
+		}
+
 		config = &Config{
-			InternalSecret: "secret",
+			AppName:        app_name,
+			InternalSecret: internal_secret,
 			Port:           port,
 			Database: DatabaseConfig{
 				PORT:     db_port,
@@ -58,6 +69,7 @@ func NewConfig(env Stage) *Config {
 				DBNAME:   db_name,
 			},
 			JWT_SECRET: jwt_secret,
+			Env:        env,
 		}
 	}
 	return config

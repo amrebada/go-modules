@@ -1,7 +1,7 @@
 package home
 
 import (
-	"github.com/amrebada/go-template/core"
+	"github.com/amrebada/go-modules/core"
 	"github.com/gin-gonic/gin"
 )
 

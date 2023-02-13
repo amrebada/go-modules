@@ -56,3 +56,12 @@ func Capitalize(s string) string {
 	}
 	return strings.ToUpper(string(s[0])) + strings.ToLower(string(s[1:]))
 }
+
+func ExtractSchemaName(typeName string) string {
+	parts := strings.Split(typeName, ".")
+	schemaName := ""
+	for _, part := range parts {
+		schemaName += Capitalize(part)
+	}
+	return schemaName
+}
