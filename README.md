@@ -17,7 +17,7 @@
 
 ## Scripts
 - development: `make dev`
-- rename name of the project: update `Makefile` with replace <name> -> `make rename`
+- rename name of the project: `make rename name=<new project name>`
 - build for linux: `make build`
 - build for mac: `make build_mac`
 - run database migration: `make migrate`
