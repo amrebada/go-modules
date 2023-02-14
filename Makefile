@@ -11,4 +11,4 @@ build:
 build_mac:
 	GOOS=darwin go build -o app -a main.go
 rename:
-	/bin/bash ./.scripts/rename.sh . go-template <name>
+	go run .scripts/rename.go -name=$(name) -old=go-template
