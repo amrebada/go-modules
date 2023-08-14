@@ -1,6 +1,6 @@
 # Go Modules
 
-[![Mentioned in Awesome Fiber](https://awesome.re/mentioned-badge.svg)](https://github.com/gofiber/awesome-fiber)  
+[![Mentioned in Awesome Fiber](https://awesome.re/mentioned-badge.svg)](https://github.com/gofiber/awesome-fiber#-boilerplates)  
 
 **go modules** is a boilerplate for **Nest.js** like, it has modules, controllers, REST generator and much more...
 
