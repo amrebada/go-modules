@@ -5,7 +5,7 @@ swagger:
 test:
 	go test ./...
 migrate:
-	go run main.go -migrate true
+	go run main.go -m true
 build:
 	GOOS=linux go build -o app -a main.go
 build_mac:

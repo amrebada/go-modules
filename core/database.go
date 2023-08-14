@@ -39,6 +39,6 @@ func NewDatabase() *Database {
 
 type EntityWithID struct {
 	ID        string    `json:"id" gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
-	CreatedAt time.Time `gorm:"column:created_at;index:createdAt" json:"createdAt"`
-	UpdatedAt time.Time `gorm:"column:updated_at;index:createdAt" json:"updatedAt"`
+	CreatedAt time.Time `gorm:"column:created_at" json:"createdAt"`
+	UpdatedAt time.Time `gorm:"column:updated_at" json:"updatedAt"`
 }
