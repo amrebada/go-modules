@@ -38,7 +38,7 @@ func NewDatabase() *Database {
 }
 
 type EntityWithID struct {
-	ID        string    `json:"id" gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
-	CreatedAt time.Time `gorm:"column:created_at" json:"createdAt"`
-	UpdatedAt time.Time `gorm:"column:updated_at" json:"updatedAt"`
+	ID        string    `json:"id" gorm:"primary_key;type:uuid;default:uuid_generate_v4()" swagger:"format=uuid"`
+	CreatedAt time.Time `gorm:"column:created_at" json:"createdAt" swagger:"type=string,format=date-time"`
+	UpdatedAt time.Time `gorm:"column:updated_at" json:"updatedAt" swagger:"type=string,format=date-time"`
 }

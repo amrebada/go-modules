@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -60,10 +61,13 @@ func (s *Server) RegisterMainModule() {
 		AddServer(SwaggerServer{
 			URL:         "https://www.example-.com/api/templates",
 			Description: "prod_server",
-		}).SetShouldGenerateSwagger(config.IS_SWAGGER)
+		})
 	s.MainModule.RegisterRoutes(s.Engine)
 
-	swagger.GenerateSwagger()
+	if config.IS_SWAGGER {
+		swagger.Write()
+		os.Exit(0)
+	}
 
 }
 

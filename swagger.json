@@ -11,7 +11,10 @@
   },
   "openapi": "3.0.2",
   "servers": [
-    { "url": "http://localhost/api/templates", "description": "local_server" },
+    {
+      "url": "http://localhost/api/templates",
+      "description": "local_server"
+    },
     {
       "url": "https://www.example-dev.com/api/templates",
       "description": "dev_server"
@@ -32,7 +35,89 @@
     }
   ],
   "paths": {
-    "/v1/auth/:id": {
+    "/v1/auth/login": {
+      "get": {
+        "summary": "get token of user",
+        "description": "get token of user",
+        "operationId": "V1AuthGetLogin",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginUserResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "summary": "Login user",
+        "description": "Login user",
+        "operationId": "V1AuthPostLogin",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginUserResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserDto"
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/v1/auth/register": {
+      "post": {
+        "summary": "Register user",
+        "description": "Register user",
+        "operationId": "V1AuthPostRegister",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/v1/auth/{id}": {
       "get": {
         "summary": "get user",
         "description": "get user",
@@ -43,42 +128,111 @@
             "in": "path",
             "description": "path parameter id ",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
-        "responses": { "200": {} },
-        "requestBody": { "content": {} },
-        "tags": ["User"]
-      }
-    },
-    "/v1/auth/login": {
-      "get": {
-        "summary": "get token of user",
-        "description": "get token of user",
-        "operationId": "V1AuthGetLogin",
-        "responses": { "200": {} },
-        "requestBody": { "content": {} },
-        "tags": ["User"]
-      },
-      "post": {
-        "summary": "Login user",
-        "description": "Login user",
-        "operationId": "V1AuthPostLogin",
-        "responses": { "200": {} },
-        "requestBody": { "content": {} },
-        "tags": ["User"]
-      }
-    },
-    "/v1/auth/register": {
-      "post": {
-        "summary": "Register user",
-        "description": "Register user",
-        "operationId": "V1AuthPostRegister",
-        "responses": { "200": {} },
-        "requestBody": { "content": {} },
-        "tags": ["User"]
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
       }
     }
   },
-  "components": {}
+  "components": {
+    "schemas": {
+      "LoginUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginUserResponseDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserEntity"
+            }
+          }
+        }
+      },
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "RegisterResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserEntity"
+          }
+        }
+      },
+      "UserEntity": {
+        "type": "object",
+        "properties": {
+          "bio": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "email": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "image": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "loggedBy": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
 }

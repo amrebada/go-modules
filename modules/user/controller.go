@@ -21,27 +21,27 @@ func NewAuthController() *AuthController {
 			SetPath("/register").
 			SetHandlerFunc(RegisterUser).
 			SetDescription("Register user").
-			SetRequestDto(&RegisterDto{}).
-			SetResponseDto(&RegisterResponseDto{})).
+			SetRequestDto(&RegisterDto{}, "").
+			SetResponseDto(&RegisterResponseDto{}, "")).
 		AddHandler(core.NewHandler().
 			SetMethod(core.HTTP_POST_METHOD).
 			SetPath("/login").
 			SetHandlerFunc(LoginUser).
 			SetDescription("Login user").
-			SetRequestDto(&LoginUserDto{}).
-			SetResponseDto(&LoginUserResponseDto{})).
+			SetRequestDto(&LoginUserDto{}, "").
+			SetResponseDto(&LoginUserResponseDto{}, "")).
 		AddHandler(core.NewHandler().
 			SetMethod(core.HTTP_GET_METHOD).
 			SetPath("/login").
 			SetHandlerFunc(LoginUser).
 			SetDescription("get token of user").
-			SetResponseDto(&LoginUserResponseDto{})).
+			SetResponseDto(&LoginUserResponseDto{}, "")).
 		AddHandler(core.NewHandler().
 			SetMethod(core.HTTP_GET_METHOD).
 			SetPath("/:id").
 			SetHandlerFunc(GetUser).
 			SetDescription("get user").
-			SetResponseDto(&UserEntity{}))
+			SetResponseDto(&UserEntity{}, ""))
 }
 
 // Login user

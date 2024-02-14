@@ -13,17 +13,24 @@ func ErrorsToJSON(err []error) []string {
 	return errors
 }
 
-func ExtractPathParameters(path string) []string {
+func ExtractPathParameters(path string) (newPath string, parameters []string) {
 	pathParts := strings.Split(path, "/")
-	parameters := []string{}
+	newPathParts := []string{}
 	for _, pathPart := range pathParts {
 		pathPart = strings.ReplaceAll(pathPart, "/", "")
 		if strings.HasPrefix(pathPart, ":") {
-			parameters = append(parameters, pathPart[1:])
+			parameterName := pathPart[1:]
+			parameters = append(parameters, parameterName)
+			pathPart = fmt.Sprintf("{%s}", parameterName)
 		}
+		newPathParts = append(newPathParts, pathPart)
 	}
 
-	return parameters
+	newPath = strings.Join(newPathParts, "/")
+	if !strings.HasPrefix(newPath, "/") {
+		return "/" + newPath, parameters
+	}
+	return newPath, parameters
 }
 
 func GenerateOperationId(path string, controllerName string, method HttpMethods, version string) string {

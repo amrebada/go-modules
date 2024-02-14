@@ -14,13 +14,16 @@ import (
 */
 
 type Handler struct {
-	Method      HttpMethods
-	Path        string
-	Middleware  []FiberHandler
-	HandlerFunc FiberHandler
-	RequestDto  interface{}
-	ResponseDto interface{}
-	Description string
+	Method                 HttpMethods
+	Path                   string
+	Middleware             []FiberHandler
+	HandlerFunc            FiberHandler
+	QueryDto               interface{}
+	RequestDto             interface{}
+	RequestDtoDescription  string
+	ResponseDto            interface{}
+	ResponseDtoDescription string
+	Description            string
 }
 
 func NewHandler() *Handler {
@@ -52,13 +55,20 @@ func (h *Handler) SetDescription(description string) *Handler {
 	return h
 }
 
-func (h *Handler) SetRequestDto(requestDto interface{}) *Handler {
-	h.RequestDto = requestDto
+func (h *Handler) SetQueryDto(queryDto interface{}) *Handler {
+	h.QueryDto = queryDto
 	return h
 }
 
-func (h *Handler) SetResponseDto(responseDto interface{}) *Handler {
+func (h *Handler) SetRequestDto(requestDto interface{}, description string) *Handler {
+	h.RequestDto = requestDto
+	h.RequestDtoDescription = description
+	return h
+}
+
+func (h *Handler) SetResponseDto(responseDto interface{}, description string) *Handler {
 	h.ResponseDto = responseDto
+	h.ResponseDtoDescription = description
 	return h
 }
 
@@ -74,27 +84,55 @@ func (h *Handler) GenerateSwagger(controllerName string, version string, control
 	Tags        []string                   `json:"tags"`
 	*/
 	operationId := GenerateOperationId(h.Path, controllerName, h.Method, version)
-	pathParameters := ExtractPathParameters(h.Path)
+	path, pathParameters := ExtractPathParameters(h.Path)
+	content := map[string]SwaggerResponseContent{}
+	if h.RequestDto != nil && h.Method != HTTP_GET_METHOD {
+
+		content["application/json"] = SwaggerResponseContent{
+			Schema: ConvertDtoToSchema(h.RequestDto, swaggerInstance, h.RequestDtoDescription),
+		}
+	}
+
+	response := map[string]SwaggerResponseContent{}
+	if h.ResponseDto != nil {
+
+		response["application/json"] = SwaggerResponseContent{
+			Schema: ConvertDtoToSchema(h.ResponseDto, swaggerInstance, h.ResponseDtoDescription),
+		}
+	}
+
 	pathItem := SwaggerPathItem{
 		Summary:     h.Description,
 		Description: h.Description,
 		OperationId: operationId,
 		Tags:        []string{moduleName},
-		RequestBody: SwaggerRequestBody{
-			Content: map[string]SwaggerResponseContent{},
-		},
 		Responses: map[HttpStatusCode]SwaggerResponse{
-			HttpStatusOK: {},
+			HttpStatusOK: {
+				Description: "OK",
+				Content:     response,
+			},
 		},
 	}
+
+	if h.Method != HTTP_GET_METHOD && h.RequestDto != nil {
+		pathItem.RequestBody = &SwaggerRequestBody{
+			Content: content,
+		}
+	}
+
+	if h.QueryDto != nil {
+		pathItem.AddQueryParameters(h.QueryDto, swaggerInstance)
+	}
+
 	for _, pathParameter := range pathParameters {
 		pathItem.AddPathParameter(pathParameter)
 	}
-	if swaggerInstance.Paths[GenerateFullPath(h.Path, version, controllerPath)] == nil {
-		swaggerInstance.Paths[GenerateFullPath(h.Path, version, controllerPath)] = SwaggerPath{}
+	if swaggerInstance.Paths[GenerateFullPath(path, version, controllerPath)] == nil {
+		swaggerInstance.Paths[GenerateFullPath(path, version, controllerPath)] = SwaggerPath{}
 	}
 
-	swaggerInstance.Paths[GenerateFullPath(h.Path, version, controllerPath)][h.Method] = pathItem
+	swaggerInstance.Paths[GenerateFullPath(path, version, controllerPath)][h.Method] = pathItem
+
 }
 
 /**
