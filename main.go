@@ -1,33 +1,22 @@
 package main
 
 import (
-	"flag"
-	"fmt"
+	"os"
 
-	"github.com/amrebada/go-modules/core"
-	"github.com/amrebada/go-modules/modules"
+	"github.com/amrebada/go-modules/core/cmd"
+	"github.com/spf13/cobra"
 )
 
 func main() {
-
-	isMigrate := false
-	isSwagger := false
-	env := "dev"
-
-	flag.BoolVar(&isMigrate, "m", false, "auto migrate database")
-	flag.BoolVar(&isSwagger, "sw", false, "generate swagger")
-	flag.StringVar(&env, "env", "dev", "identify which environment to load from {.env} file [.env.prod, .env.dev, .env.test, .env]")
-	flag.Parse()
-	core.NewConfig(core.Stage(env)).
-		SetMigrate(isMigrate).
-		SetSwagger(isSwagger)
-
-	app := core.NewServer()
-	app.MainModule = modules.NewAppModule()
-	app.RegisterMainModule()
-	err := app.Start()
+	rootCmd := &cobra.Command{
+		Use:   "go-modules",
+		Short: "go-modules module CLI",
+		Long:  `go-modules module CLI`,
+	}
+	cmd.RegisterCmd(rootCmd)
+	err := rootCmd.Execute()
 	if err != nil {
-		fmt.Println(err)
+		os.Exit(1)
 	}
 
 }

@@ -1,11 +1,11 @@
 dev:
-	nodemon --exec go run main.go -env dev --signal SIGTERM
+	air -c .air.toml server
 swagger:
-	go run main.go -sw
+	go run main.go swagger
 test:
 	go test ./...
 migrate:
-	go run main.go -m true
+	go run main.go migrate
 build:
 	GOOS=linux go build -o app -a main.go
 build_mac:
