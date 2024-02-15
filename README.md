@@ -9,7 +9,7 @@
 1. [gorm](https://gorm.io/) database support with entities, auto migration
 1. `postgresql` database
 1. [gofiber](https://gofiber.io/) support for web server, middlewares ...
-1.  🔎 `swagger generating` *comming soon*
+1.  🌍 `swagger generating`
 
 
 ## Prequisites
