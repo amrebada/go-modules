@@ -1,6 +1,6 @@
 package user
 
-import "github.com/amrebada/go-modules/core"
+import core "github.com/amrebada/neon-core"
 
 type UserModule = core.Module
 

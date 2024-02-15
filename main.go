@@ -3,7 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/amrebada/go-modules/core/cmd"
+	"github.com/amrebada/go-modules/modules"
+	"github.com/amrebada/neon-core/cmd"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +14,8 @@ func main() {
 		Short: "go-modules module CLI",
 		Long:  `go-modules module CLI`,
 	}
-	cmd.RegisterCmd(rootCmd)
+	mainModule := modules.NewAppModule()
+	cmd.RegisterCmd(rootCmd, mainModule)
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)

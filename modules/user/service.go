@@ -3,7 +3,7 @@ package user
 import (
 	"time"
 
-	"github.com/amrebada/go-modules/core"
+	core "github.com/amrebada/neon-core"
 	"github.com/golang-jwt/jwt"
 )
 

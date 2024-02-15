@@ -1,7 +1,7 @@
 package home
 
 import (
-	"github.com/amrebada/go-modules/core"
+	core "github.com/amrebada/neon-core"
 	"github.com/gin-gonic/gin"
 )
 

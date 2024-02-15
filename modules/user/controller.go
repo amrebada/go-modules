@@ -3,8 +3,8 @@ package user
 import (
 	"fmt"
 
-	"github.com/amrebada/go-modules/core"
 	"github.com/amrebada/go-modules/home"
+	core "github.com/amrebada/neon-core"
 	"github.com/gofiber/fiber/v2"
 )
 

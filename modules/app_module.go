@@ -1,8 +1,8 @@
 package modules
 
 import (
-	"github.com/amrebada/go-modules/core"
 	user "github.com/amrebada/go-modules/modules/user"
+	core "github.com/amrebada/neon-core"
 )
 
 type AppModule = core.Module

@@ -3,7 +3,7 @@ package user
 import (
 	"strings"
 
-	"github.com/amrebada/go-modules/core"
+	core "github.com/amrebada/neon-core"
 	"gorm.io/gorm"
 )
 
