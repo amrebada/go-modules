@@ -1,16 +1,20 @@
-package user
+package controllers
 
 import (
 	"fmt"
 
 	"github.com/amrebada/go-modules/home"
+	"github.com/amrebada/go-modules/modules/user/config"
+	"github.com/amrebada/go-modules/modules/user/dtos"
+	"github.com/amrebada/go-modules/modules/user/entities"
+	"github.com/amrebada/go-modules/modules/user/services"
 	core "github.com/amrebada/neon-core"
 	"github.com/gofiber/fiber/v2"
 )
 
 type AuthController = core.Controller
 
-func NewAuthController() *AuthController {
+func NewAuthController(config *config.UserModuleConfiguration) *AuthController {
 
 	return core.NewController().
 		SetName("Auth").
@@ -21,38 +25,38 @@ func NewAuthController() *AuthController {
 			SetPath("/register").
 			SetHandlerFunc(RegisterUser).
 			SetDescription("Register user").
-			SetRequestDto(&RegisterDto{}, "").
-			SetResponseDto(&RegisterResponseDto{}, "")).
+			SetRequestDto(&dtos.RegisterDto{}, "").
+			SetResponseDto(&dtos.RegisterResponseDto{}, "")).
 		AddHandler(core.NewHandler().
 			SetMethod(core.HTTP_POST_METHOD).
 			SetPath("/login").
 			SetHandlerFunc(LoginUser).
 			SetDescription("Login user").
-			SetRequestDto(&LoginUserDto{}, "").
-			SetResponseDto(&LoginUserResponseDto{}, "")).
+			SetRequestDto(&dtos.LoginUserDto{}, "").
+			SetResponseDto(&dtos.LoginUserResponseDto{}, "")).
 		AddHandler(core.NewHandler().
 			SetMethod(core.HTTP_GET_METHOD).
 			SetPath("/login").
 			SetHandlerFunc(LoginUser).
 			SetDescription("get token of user").
-			SetResponseDto(&LoginUserResponseDto{}, "")).
+			SetResponseDto(&dtos.LoginUserResponseDto{}, "")).
 		AddHandler(core.NewHandler().
 			SetMethod(core.HTTP_GET_METHOD).
 			SetPath("/:id").
 			SetHandlerFunc(GetUser).
 			SetDescription("get user").
-			SetResponseDto(&UserEntity{}, ""))
+			SetResponseDto(&entities.User{}, ""))
 }
 
 // Login user
 func RegisterUser(ctx *fiber.Ctx) error {
-	registerDto := &RegisterDto{}
+	registerDto := &dtos.RegisterDto{}
 	err := ctx.BodyParser(registerDto)
 	if err != nil {
 		ctx.Status(400).JSON(home.ErrorResponse([]error{err}, home.CANNOT_PARSE_BODY))
 		return err
 	}
-	user, err := Register(registerDto)
+	user, err := services.Register(registerDto)
 	if err != nil {
 		ctx.Status(401).JSON(home.ErrorResponse([]error{err}, home.OAUTH_TOKEN_NOT_CORRECT))
 		return err
@@ -62,7 +66,7 @@ func RegisterUser(ctx *fiber.Ctx) error {
 }
 
 func LoginUser(ctx *fiber.Ctx) error {
-	findUserDto := &LoginUserDto{}
+	findUserDto := &dtos.LoginUserDto{}
 	err := ctx.BodyParser(findUserDto)
 	if err != nil {
 		ctx.Status(400).JSON(home.ErrorResponse([]error{err}, home.CANNOT_PARSE_BODY))

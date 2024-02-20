@@ -1,4 +1,6 @@
-package user
+package dtos
+
+import "github.com/amrebada/go-modules/modules/user/entities"
 
 type RegisterDto struct {
 	AccessToken string `json:"accessToken" binding:"required"`
@@ -6,8 +8,8 @@ type RegisterDto struct {
 }
 
 type RegisterResponseDto struct {
-	Token string     `json:"token"`
-	User  UserEntity `json:"user"`
+	Token string        `json:"token"`
+	User  entities.User `json:"user"`
 }
 
 type FindUserDto struct {
@@ -15,8 +17,8 @@ type FindUserDto struct {
 }
 
 type FindUserResponseDto struct {
-	Users []UserEntity `json:"users"`
-	Total int64        `json:"total"`
+	Users []entities.User `json:"users"`
+	Total int64           `json:"total"`
 }
 
 type LoginUserDto struct {
@@ -24,6 +26,6 @@ type LoginUserDto struct {
 }
 
 type LoginUserResponseDto struct {
-	Users []UserEntity `json:"users"`
-	Total int64        `json:"total"`
+	Users []entities.User `json:"users"`
+	Total int64           `json:"total"`
 }
