@@ -1,3 +1,5 @@
+[![Free Palestine](https://free-palestine.amrebada.com/free-palestine-banner.svg)](https://free-palestine.amrebada.com)
+
 # Go Modules
 
 [![Mentioned in Awesome Fiber](https://awesome.re/mentioned-badge.svg)](https://github.com/gofiber/awesome-fiber#-boilerplates)  
